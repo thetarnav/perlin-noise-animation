@@ -1,0 +1,23 @@
+{
+	"name": "perlin-noise-animation",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.html",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/thetarnav/perlin-noise-animation.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/thetarnav/perlin-noise-animation/issues"
+	},
+	"homepage": "https://github.com/thetarnav/perlin-noise-animation#readme",
+	"devDependencies": {
+		"parcel-bundler": "^1.12.4"
+	}
+}
