@@ -4,6 +4,7 @@
 	"description": "",
 	"main": "index.html",
 	"scripts": {
+		"dev": "parcel src/index.pug",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
@@ -18,6 +19,11 @@
 	},
 	"homepage": "https://github.com/thetarnav/perlin-noise-animation#readme",
 	"devDependencies": {
-		"parcel-bundler": "^1.12.4"
+		"parcel-bundler": "^1.12.4",
+		"pug": "^2.0.4",
+		"sass": "^1.26.2"
+	},
+	"dependencies": {
+		"helpers.js": "^1.0.0"
 	}
 }

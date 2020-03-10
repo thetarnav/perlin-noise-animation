@@ -1,0 +1,23 @@
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #eee;
+  color: #111;
+}
+
+.box {
+  width: 0;
+  min-width: 2px;
+  height: 10px;
+  margin-bottom: 2px;
+  background-color: red;
+}
+
+/*# sourceMappingURL=/style.a08d0c2a.css.map */
