@@ -356,32 +356,59 @@ module.exports = {
   URL: URL,
   addMultiEventListener: addMultiEventListener,
   serialize: serialize,
-  setCssProperties: setCssProperties
+  setCssProperties: setCssProperties,
+  wait: wait,
+  promiseWhile: promiseWhile
 };
 },{}],"script.js":[function(require,module,exports) {
 var _require = require('./helpers'),
     pToVal = _require.pToVal,
     setCssProperties = _require.setCssProperties,
     round = _require.round,
-    stayInRange = _require.stayInRange;
+    stayInRange = _require.stayInRange,
+    random = _require.random;
 
-var perlinList = document.querySelectorAll('.box'); // console.log(stayInRange(-0.5, 0, 2, 'loop'))
-// for (let i = 0; i <= elList.length - 1; i++) {
-// 	let n = stayInRange(i / 10, 0, 1, 'loop')
-// 	console.log(n)
-// 	setCssProperties(elList[i], ['left', n * 10 + 'px'])
-// }
-// console.log(randomize(0, 1, 1), randomize(0, 12, 1))
+var barTotal = first.children.length,
+    valuesList = [];
 
-for (var i = 0; i <= perlinList.length - 1; i++) {
-  var noise = perlin.get(i / 4, 0),
-      el = perlinList[i];
-  noise = round(noise, -100); // console.log(noise)
-  // console.log(stayInRange(-0.5, 0, 1, 'loop'))
-
-  noise = stayInRange(noise, 0, 1, 'bounce');
-  setCssProperties(el, ['width', noise * 300 + 'px']);
+for (var i = 0; i < barTotal; i++) {
+  valuesList.push(0);
 }
+
+setInterval(generateNextValue, 1000);
+var n = 0;
+
+function generateNextValue() {
+  var noise = perlin.get(++n / random(3, 11), 0);
+  noise = stayInRange(noise, 0, 1, 'bounce');
+  valuesList.shift();
+  valuesList.push(noise);
+  var propertiesList = [];
+
+  for (var _i = 0; _i < barTotal; _i++) {
+    propertiesList.push(["--value".concat(_i), valuesList[_i] + 'px']);
+  }
+
+  setCssProperties.apply(void 0, [first].concat(propertiesList));
+  console.table(valuesList);
+  n >= 10 && (n = 1);
+} // const perlinList = document.querySelectorAll('.box')
+// // console.log(stayInRange(-0.5, 0, 2, 'loop'))
+// // for (let i = 0; i <= elList.length - 1; i++) {
+// // 	let n = stayInRange(i / 10, 0, 1, 'loop')
+// // 	console.log(n)
+// // 	setCssProperties(elList[i], ['left', n * 10 + 'px'])
+// // }
+// // console.log(randomize(0, 1, 1), randomize(0, 12, 1))
+// for (let i = 0; i <= perlinList.length - 1; i++) {
+// 	let noise = perlin.get(i / 4, 0),
+// 		el = perlinList[i]
+// 	noise = round(noise, -100)
+// 	// console.log(noise)
+// 	// console.log(stayInRange(-0.5, 0, 1, 'loop'))
+// 	noise = stayInRange(noise, 0, 1, 'bounce')
+// 	setCssProperties(el, ['width', noise * 300 + 'px'])
+// }
 },{"./helpers":"helpers.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -410,7 +437,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59361" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51898" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -4,16 +4,31 @@
 	box-sizing: border-box
 
 body
-	// height: 100vh
+	height: 100vh
 	display: flex
 	justify-content: center
 	align-items: center
 	background: #eee
 	color: #111
 
-.box
-	width: 0
-	min-width: 2px
-	height: 10px
-	margin-bottom: 2px
-	background-color: red
+.first
+	display: flex
+	overflow: hidden
+	align-items: flex-end
+
+	$height: 100px
+
+	height: $height
+
+	.bar
+		position: relative
+		top: $height
+		width: 20px
+		height: 100px
+		margin-right: 7px
+		background-color: #1e1e1e
+		transition: transform .95s
+
+	@for $i from 0 to 10
+		.bar:nth-child(#{$i + 1})
+			transform: translateY(calc(var(--value#{$i}) * -200))

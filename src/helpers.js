@@ -242,4 +242,6 @@ module.exports = {
 	addMultiEventListener,
 	serialize,
 	setCssProperties,
+	wait,
+	promiseWhile,
 }
