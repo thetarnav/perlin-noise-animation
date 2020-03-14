@@ -6,6 +6,10 @@ const {
 	random,
 } = require('./helpers')
 
+import anime from 'animejs'
+
+import easing from './easings'
+
 const barTotal = first.children.length,
 	valuesList = []
 
@@ -13,12 +17,18 @@ for (let i = 0; i < barTotal; i++) {
 	valuesList.push(0)
 }
 
-setInterval(generateNextValue, 1000)
+setInterval(generateNextValue, 300)
 
 let n = 0
 function generateNextValue() {
-	let noise = perlin.get(++n / random(3, 11), 0)
+	let noise = perlin.get(++n/ random(6, 7), 0)
 	noise = stayInRange(noise, 0, 1, 'bounce')
+	// noise = round(noise, -100)
+	const easeOutSin = function (t) {
+		return Math.sin(Math.PI / 2 * t);
+	 }
+
+	noise = easeOutSin(noise)
 
 	valuesList.shift()
 	valuesList.push(noise)
@@ -28,10 +38,18 @@ function generateNextValue() {
 	for (let i = 0; i < barTotal; i++) {
 		propertiesList.push([`--value${i}`, valuesList[i] + 'px'])
 	}
-	setCssProperties(first, ...propertiesList)
+	// setCssProperties(first, ...propertiesList)
 
 	console.table(valuesList)
-	n >= 10 && (n = 1)
+
+	anime({
+		targets: first.children,
+		translateY: (el, i) => - valuesList[i] * 90,
+		// delay: (el, i) => 50 * (barTotal - i),
+		duration: 3000,
+		easing: 'easeOutElastic(1, .8)',
+		// delay: () => random(0, 150)
+	 });
 }
 
 // const perlinList = document.querySelectorAll('.box')

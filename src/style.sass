@@ -12,9 +12,9 @@ body
 	color: #111
 
 .first
-	display: flex
 	overflow: hidden
-	align-items: flex-end
+	display: flex
+	// align-items: flex-end
 
 	$height: 100px
 
@@ -22,13 +22,15 @@ body
 
 	.bar
 		position: relative
-		top: $height
+		top: $height - 10px
 		width: 20px
 		height: 100px
 		margin-right: 7px
 		background-color: #1e1e1e
-		transition: transform .95s
+		// transition: transform .95s
 
-	@for $i from 0 to 10
-		.bar:nth-child(#{$i + 1})
-			transform: translateY(calc(var(--value#{$i}) * -200))
+	// @for $i from 0 to 10
+	// 	.bar:nth-child(#{$i + 1})
+	// 		transform: translateY(calc(var(--value#{$i}) * -200))
+
+
