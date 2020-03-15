@@ -24,6 +24,7 @@
 		"sass": "^1.26.2"
 	},
 	"dependencies": {
+		"@trinkets/noise": "0.0.4",
 		"animejs": "^3.1.0",
 		"helpers.js": "^1.0.0"
 	}

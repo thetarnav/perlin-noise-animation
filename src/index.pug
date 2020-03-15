@@ -1,14 +1,21 @@
 doctype html
 html(lang="")
 	head
+		link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500&display=swap")
 		link(rel="stylesheet", href="style.sass")
-		script(src="https://joeiddon.github.io/perlin/perlin.js")
 	body
 		//- .perlin
 		//- 	- for (let i = 0; i <= 301; ++i)
-		//- 		.box
+		//- 		p X
 		#first.first
-			-for (let i = 0; i< 10; i++)
-				.bar
+			-var n = 12
+			.lines
+				-for (let i = 0; i< n; i++)
+					.line
+						p #{i}
+			.bars
+				-for (let i = 0; i< n; i++)
+					.bar
+
 
 	script(src="script.js")

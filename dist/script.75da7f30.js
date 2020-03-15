@@ -172,7 +172,7 @@ var round = function round(number) {
   return Math.round(number / (toDecimal < 0 ? 1 / toDecimal : toDecimal)) / (toDecimal > 0 ? 1 / toDecimal : toDecimal);
 };
 
-var setCssProperties = function setCssProperties(el) {
+var setCssProps = function setCssProps(el) {
   for (var _len = arguments.length, pairs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     pairs[_key - 1] = arguments[_key];
   }
@@ -356,7 +356,7 @@ module.exports = {
   URL: URL,
   addMultiEventListener: addMultiEventListener,
   serialize: serialize,
-  setCssProperties: setCssProperties,
+  setCssProps: setCssProps,
   wait: wait,
   promiseWhile: promiseWhile
 };
@@ -2099,7 +2099,7 @@ anime.random = function (min, max) {
 
 var _default = anime;
 exports.default = _default;
-},{}],"easings.js":[function(require,module,exports) {
+},{}],"easing.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2126,31 +2126,31 @@ var _default = {
   },
   // acceleration until halfway, then deceleration
   easeInOutQuad: function easeInOutQuad(t) {
-    return t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   },
-  // accelerating from zero velocity 
+  // accelerating from zero velocity
   easeInCubic: function easeInCubic(t) {
     return t * t * t;
   },
-  // decelerating to zero velocity 
+  // decelerating to zero velocity
   easeOutCubic: function easeOutCubic(t) {
     return --t * t * t + 1;
   },
-  // acceleration until halfway, then deceleration 
+  // acceleration until halfway, then deceleration
   easeInOutCubic: function easeInOutCubic(t) {
-    return t < .5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+    return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
   },
-  // accelerating from zero velocity 
+  // accelerating from zero velocity
   easeInQuart: function easeInQuart(t) {
     return t * t * t * t;
   },
-  // decelerating to zero velocity 
+  // decelerating to zero velocity
   easeOutQuart: function easeOutQuart(t) {
     return 1 - --t * t * t * t;
   },
   // acceleration until halfway, then deceleration
   easeInOutQuart: function easeInOutQuart(t) {
-    return t < .5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t;
+    return t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t;
   },
   // accelerating from zero velocity
   easeInQuint: function easeInQuint(t) {
@@ -2160,32 +2160,170 @@ var _default = {
   easeOutQuint: function easeOutQuint(t) {
     return 1 + --t * t * t * t * t;
   },
-  // acceleration until halfway, then deceleration 
+  // acceleration until halfway, then deceleration
   easeInOutQuint: function easeInOutQuint(t) {
-    return t < .5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t;
+    return t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t;
+  },
+  easeInSin: function easeInSin(t) {
+    return 1 + Math.sin(Math.PI / 2 * t - Math.PI / 2);
+  },
+  easeOutSin: function easeOutSin(t) {
+    return Math.sin(Math.PI / 2 * t);
+  },
+  easeInOutSin: function easeInOutSin(t) {
+    return (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2;
   }
 };
 exports.default = _default;
+},{}],"../node_modules/@trinkets/noise/dist/monolithic-iife/index.js":[function(require,module,exports) {
+(function (exports) {
+  'use strict';
+
+  /**
+   * Create a 2d perlin noise function.
+   *
+   * The returned function is initialized and ready for use.
+   */
+  var create = function create() {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$random = _ref.random,
+        random = _ref$random === void 0 ? Math.random : _ref$random,
+        _ref$jitter = _ref.jitter,
+        jitter = _ref$jitter === void 0 ? true : _ref$jitter;
+
+    // Size, mask, perm, gradsX, and gradsY are all related.
+    // How many unit vectors will we create?
+    var size = 256; // Used to constrain the absolute values of incoming points to our vector lookup table.
+
+    var mask = size - 1; // Our hash lookup into of, "Which gradient vector should I use for a particular point?"
+
+    var perm = []; // gradsX and gradsY together form the 2d gradient vector we use, with randomized
+    // lookup via `perm`.
+
+    var gradsX = [];
+    var gradsY = []; // jitX and jitY together allow us, in general, to offset the zero value of
+    // an integer input {x, y}. We use this in our implementation by default as
+    // default grid coordinates are integer based. Smoother noise can be added
+    // by the caller.
+
+    var jitX = [];
+    var jitY = [];
+    /**
+     * Generate a set of randomized gradient vectors used in our noise calculations.
+     *
+     * Automatically called when creating a new function. Can be called by the
+     * user to reset the tables of that particular instance of the noise function.
+     */
+
+    var init = function init() {
+      for (var i = 0; i < size; ++i) {
+        var other = Math.floor(random() * Number.MAX_SAFE_INTEGER) % (i + 1); // Generate a randomized list of integers.
+        // see: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_.22inside-out.22_algorithm
+
+        if (i > other) {
+          perm[i] = perm[other];
+        }
+
+        perm[other] = i; // All the unit vectors in a circle of `size`.
+
+        gradsX[i] = Math.cos(2 * Math.PI * i / size);
+        gradsY[i] = Math.sin(2 * Math.PI * i / size); // Per notes, jitter offset is a random number between 0 and 1 and is applied
+        // to each gradient vector. As jitter is applied via addition, setting to
+        // 0 is turning it off.
+
+        jitX[i] = jitter ? random() : 0;
+        jitY[i] = jitter ? random() : 0;
+      }
+    }; // Return value between 1 and 0; 1 at 0, 0 at >= 1 or -1.
+    // The unit vectors beyond a given point will not contribute to the result.
+
+
+    var falloff = function falloff(t) {
+      t = Math.abs(t);
+      return t >= 1 ? 0 : 1 - (3 - 2 * t) * t * t;
+    }; // Return surflet value at a point.
+    // The definition of surflet from the code we stole means that without any
+    // jitter, the value at an integer coord will always be 0.
+
+
+    var surflet = function surflet(x, y, gradX, gradY) {
+      return falloff(x) * falloff(y) * (gradX * x + gradY * y);
+    }; // Take an {x: float, y: float} coordinate and return a float value of the
+    // noise at that particular coordinate.
+    // Due to jitter, this function is generally friendly to integer based {x,y}
+    // coordinates.
+
+
+    var perlin = function perlin(x, y) {
+      var result = 0;
+      var cellX = Math.floor(x);
+      var cellY = Math.floor(y);
+
+      for (var gridY = cellY; gridY <= cellY + 1; ++gridY) {
+        for (var gridX = cellX; gridX <= cellX + 1; ++gridX) {
+          var hash = perm[perm[gridX & mask] + gridY & mask]; // Original, non-jittered:
+          // result += surflet(x - gridX, y - gridY, gradsX[hash], gradsY[hash])
+          // add "jitter" to make it friendlier to {x, y} being integers.
+
+          result += surflet(x - gridX + jitX[hash], y - gridY + jitY[hash], gradsX[hash], gradsY[hash]);
+        }
+      }
+
+      return result;
+    }; // Initialize.
+
+
+    init(); // Export "private" properties/methods for introspection and testing.
+    // Meant to be accessed read-only.
+
+    perlin._size = size;
+    perlin._mask = mask;
+    perlin._perm = perm;
+    perlin._gradsX = gradsX;
+    perlin._gradsY = gradsY;
+    perlin._surflet = surflet;
+    perlin._falloff = falloff; // Public API.
+    // Allow and encourage reininitialization if needed.
+
+    perlin.init = init;
+    return perlin;
+  };
+
+  var perlin = create(); // For those that need to create and configure their own instances.
+
+  var factories = {
+    perlin: create
+  };
+
+  exports.factories = factories;
+  exports.perlin = perlin;
+
+}(this['@trinkets/noise'] = this['@trinkets/noise'] || {}));
+
+
 },{}],"script.js":[function(require,module,exports) {
 "use strict";
 
 var _animejs = _interopRequireDefault(require("animejs"));
 
-var _easings = _interopRequireDefault(require("./easings"));
+var _easing = _interopRequireDefault(require("./easing"));
+
+var _noise = _interopRequireDefault(require("@trinkets/noise"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _require = require('./helpers'),
     pToVal = _require.pToVal,
-    setCssProperties = _require.setCssProperties,
+    setCssProps = _require.setCssProps,
     round = _require.round,
     stayInRange = _require.stayInRange,
     random = _require.random;
 
-var barTotal = first.children.length,
+var getPerlin = _noise.default['@trinkets/noise'].perlin;
+var firstBars = document.querySelectorAll('#first .bar'),
     valuesList = [];
 
-for (var i = 0; i < barTotal; i++) {
+for (var i = 0; i < firstBars.length; i++) {
   valuesList.push(0);
 }
 
@@ -2193,52 +2331,41 @@ setInterval(generateNextValue, 300);
 var n = 0;
 
 function generateNextValue() {
-  var noise = perlin.get(++n / random(6, 7), 0);
-  noise = stayInRange(noise, 0, 1, 'bounce'); // noise = round(noise, -100)
+  var noise = getPerlin(++n / 3, 0); // noise+=.5
 
-  var easeOutSin = function easeOutSin(t) {
-    return Math.sin(Math.PI / 2 * t);
-  };
+  noise = stayInRange(noise, 0, .5, 'bounce');
+  noise *= 2; // noise = round(noise, -100)
 
-  noise = easeOutSin(noise);
+  noise = _easing.default.easeInOutSin(noise);
   valuesList.shift();
   valuesList.push(noise);
   var propertiesList = [];
 
-  for (var _i = 0; _i < barTotal; _i++) {
+  for (var _i = 0; _i < firstBars.length; _i++) {
     propertiesList.push(["--value".concat(_i), valuesList[_i] + 'px']);
-  } // setCssProperties(first, ...propertiesList)
+  } // setCssProps(first, ...propertiesList)
 
 
-  console.table(valuesList);
   (0, _animejs.default)({
-    targets: first.children,
+    targets: firstBars,
     translateY: function translateY(el, i) {
-      return -valuesList[i] * 90;
+      return -valuesList[i] * (85 - 12);
     },
-    // delay: (el, i) => 50 * (barTotal - i),
     duration: 3000,
-    easing: 'easeOutElastic(1, .8)' // delay: () => random(0, 150)
-
+    easing: 'easeOutElastic(1, .8)'
   });
-} // const perlinList = document.querySelectorAll('.box')
-// // console.log(stayInRange(-0.5, 0, 2, 'loop'))
-// // for (let i = 0; i <= elList.length - 1; i++) {
-// // 	let n = stayInRange(i / 10, 0, 1, 'loop')
-// // 	console.log(n)
-// // 	setCssProperties(elList[i], ['left', n * 10 + 'px'])
-// // }
-// // console.log(randomize(0, 1, 1), randomize(0, 12, 1))
-// for (let i = 0; i <= perlinList.length - 1; i++) {
-// 	let noise = perlin.get(i / 4, 0),
-// 		el = perlinList[i]
-// 	noise = round(noise, -100)
-// 	// console.log(noise)
-// 	// console.log(stayInRange(-0.5, 0, 1, 'loop'))
-// 	noise = stayInRange(noise, 0, 1, 'bounce')
-// 	setCssProperties(el, ['width', noise * 300 + 'px'])
-// }
-},{"./helpers":"helpers.js","animejs":"../node_modules/animejs/lib/anime.es.js","./easings":"easings.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+} // logging perlin noise
+
+
+var perlinXes = document.querySelectorAll('.perlin p');
+perlinXes.forEach(function (p, i) {
+  var noise = getPerlin(i / 3, 0); // noise+=.5
+
+  noise = stayInRange(noise, 0, 1, 'bounce');
+  noise = _easing.default.easeOutQuad(noise);
+  p.style.marginLeft = noise * 200 + 'px';
+});
+},{"./helpers":"helpers.js","animejs":"../node_modules/animejs/lib/anime.es.js","./easing":"easing.js","@trinkets/noise":"../node_modules/@trinkets/noise/dist/monolithic-iife/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2266,7 +2393,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49366" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52669" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

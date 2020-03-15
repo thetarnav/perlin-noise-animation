@@ -35,7 +35,7 @@ const round = (number, toDecimal = 1) =>
 	Math.round(number / (toDecimal < 0 ? 1 / toDecimal : toDecimal)) /
 	(toDecimal > 0 ? 1 / toDecimal : toDecimal)
 
-const setCssProperties = (el, ...pairs) =>
+const setCssProps = (el, ...pairs) =>
 	pairs.forEach(pair => el.style.setProperty(pair[0], pair[1]))
 
 const stayInRange = (value, min, max, behavior = 'loop') => {
@@ -241,7 +241,7 @@ module.exports = {
 	URL,
 	addMultiEventListener,
 	serialize,
-	setCssProperties,
+	setCssProps,
 	wait,
 	promiseWhile,
 }

@@ -3,34 +3,76 @@
 	padding: 0
 	box-sizing: border-box
 
+$black: #292829
+$grey: #E2DFDD
+$white: #FFFDFA
+
 body
 	height: 100vh
 	display: flex
 	justify-content: center
 	align-items: center
-	background: #eee
-	color: #111
+	background: $white
+
+.perlin
+	position: absolute
+	top: 20px
 
 .first
-	overflow: hidden
-	display: flex
-	// align-items: flex-end
+	$height: 85px
+	$bar-width: 12px
+	$bar-margin: 8px
 
-	$height: 100px
-
+	position: relative
 	height: $height
+
+	.bars
+		// height: $height
+		display: flex
+
+		// align-items: flex-end
+		overflow: hidden
 
 	.bar
 		position: relative
-		top: $height - 10px
-		width: 20px
-		height: 100px
-		margin-right: 7px
-		background-color: #1e1e1e
-		// transition: transform .95s
+		top: $height - 12px
+		width: $bar-width
+		height: $height
+		box-sizing: content-box
+		outline: 2px solid $white
+		margin-right: $bar-margin
+		background-color: $black
 
-	// @for $i from 0 to 10
-	// 	.bar:nth-child(#{$i + 1})
-	// 		transform: translateY(calc(var(--value#{$i}) * -200))
+		&:last-of-type
+			margin-right: 0
 
+	.lines
+		$padding: 4px
 
+		position: absolute
+		top: -$padding
+		left: 0
+		height: calc(100% + #{$padding * 2})
+		width: 100%
+		display: flex
+		justify-content: space-between
+
+	.line
+		$width: 2px
+
+		position: relative
+		width: $width
+		height: 100%
+		background-color: $grey
+		margin: 0 ($bar-width / 2 - $width / 2)
+
+		p
+			position: absolute
+			top: 100%
+			left: -$bar-width / 2 + $width / 2
+			width: $bar-width
+			text-align: center
+			font-family: 'M PLUS 1p', mono
+			font-size: 10px
+			font-weight: 500
+			color: #727071

@@ -9,22 +9,61 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #eee;
-  color: #111;
+  background: #FFFDFA;
+}
+
+.perlin {
+  position: absolute;
+  top: 20px;
 }
 
 .first {
-  overflow: hidden;
+  position: relative;
+  height: 85px;
+}
+.first .bars {
   display: flex;
-  height: 100px;
+  overflow: hidden;
 }
 .first .bar {
   position: relative;
-  top: 90px;
-  width: 20px;
-  height: 100px;
-  margin-right: 7px;
-  background-color: #1e1e1e;
+  top: 73px;
+  width: 12px;
+  height: 85px;
+  box-sizing: content-box;
+  outline: 2px solid #FFFDFA;
+  margin-right: 8px;
+  background-color: #292829;
+}
+.first .bar:last-of-type {
+  margin-right: 0;
+}
+.first .lines {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  height: calc(100% + 8px);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.first .line {
+  position: relative;
+  width: 2px;
+  height: 100%;
+  background-color: #E2DFDD;
+  margin: 0 5px;
+}
+.first .line p {
+  position: absolute;
+  top: 100%;
+  left: -5px;
+  width: 12px;
+  text-align: center;
+  font-family: "M PLUS 1p", mono;
+  font-size: 10px;
+  font-weight: 500;
+  color: #727071;
 }
 
 /*# sourceMappingURL=/style.a08d0c2a.css.map */

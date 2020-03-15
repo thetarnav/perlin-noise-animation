@@ -1,80 +1,53 @@
-const {
-	pToVal,
-	setCssProperties,
-	round,
-	stayInRange,
-	random,
-} = require('./helpers')
+const { pToVal, setCssProps, round, stayInRange, random } = require('./helpers')
 
 import anime from 'animejs'
+import easing from './easing'
+import Noise from '@trinkets/noise'
+const getPerlin = Noise['@trinkets/noise'].perlin
 
-import easing from './easings'
-
-const barTotal = first.children.length,
+const firstBars = document.querySelectorAll('#first .bar'),
 	valuesList = []
 
-for (let i = 0; i < barTotal; i++) {
-	valuesList.push(0)
-}
+for (let i = 0; i < firstBars.length; i++) valuesList.push(0)
 
 setInterval(generateNextValue, 300)
 
 let n = 0
 function generateNextValue() {
-	let noise = perlin.get(++n/ random(6, 7), 0)
-	noise = stayInRange(noise, 0, 1, 'bounce')
+	let noise = getPerlin(++n/3, 0)
+	// noise+=.5
+	noise = stayInRange(noise, 0, .5, 'bounce')
+	noise*=2
 	// noise = round(noise, -100)
-	const easeOutSin = function (t) {
-		return Math.sin(Math.PI / 2 * t);
-	 }
 
-	noise = easeOutSin(noise)
+	noise = easing.easeInOutSin(noise)
 
 	valuesList.shift()
 	valuesList.push(noise)
 
 	let propertiesList = []
 
-	for (let i = 0; i < barTotal; i++) {
+	for (let i = 0; i < firstBars.length; i++) {
 		propertiesList.push([`--value${i}`, valuesList[i] + 'px'])
 	}
-	// setCssProperties(first, ...propertiesList)
-
-	console.table(valuesList)
+	// setCssProps(first, ...propertiesList)
 
 	anime({
-		targets: first.children,
-		translateY: (el, i) => - valuesList[i] * 90,
-		// delay: (el, i) => 50 * (barTotal - i),
+		targets: firstBars,
+		translateY: (el, i) => -valuesList[i] * (85 - 12),
 		duration: 3000,
 		easing: 'easeOutElastic(1, .8)',
-		// delay: () => random(0, 150)
-	 });
+	})	
 }
 
-// const perlinList = document.querySelectorAll('.box')
 
-// // console.log(stayInRange(-0.5, 0, 2, 'loop'))
+// logging perlin noise
+const perlinXes = document.querySelectorAll('.perlin p')
+perlinXes.forEach((p, i) => {
+	let noise = getPerlin(i/3, 0)
+	// noise+=.5
+	noise = stayInRange(noise, 0, 1, 'bounce')
+	noise = easing.easeOutQuad(noise)
 
-// // for (let i = 0; i <= elList.length - 1; i++) {
-// // 	let n = stayInRange(i / 10, 0, 1, 'loop')
-// // 	console.log(n)
-
-// // 	setCssProperties(elList[i], ['left', n * 10 + 'px'])
-// // }
-
-// // console.log(randomize(0, 1, 1), randomize(0, 12, 1))
-
-// for (let i = 0; i <= perlinList.length - 1; i++) {
-// 	let noise = perlin.get(i / 4, 0),
-// 		el = perlinList[i]
-
-// 	noise = round(noise, -100)
-// 	// console.log(noise)
-
-// 	// console.log(stayInRange(-0.5, 0, 1, 'loop'))
-
-// 	noise = stayInRange(noise, 0, 1, 'bounce')
-
-// 	setCssProperties(el, ['width', noise * 300 + 'px'])
-// }
+	p.style.marginLeft = noise * 200 + 'px'
+})
