@@ -5,6 +5,7 @@
 	"main": "index.html",
 	"scripts": {
 		"dev": "parcel src/index.pug",
+		"build": "parcel build src/index.pug",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
