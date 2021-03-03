@@ -21,7 +21,7 @@
 	"homepage": "https://github.com/thetarnav/perlin-noise-animation#readme",
 	"devDependencies": {
 		"parcel-bundler": "^1.12.4",
-		"pug": "^2.0.4",
+		"pug": "^3.0.1",
 		"sass": "^1.26.2"
 	},
 	"dependencies": {
